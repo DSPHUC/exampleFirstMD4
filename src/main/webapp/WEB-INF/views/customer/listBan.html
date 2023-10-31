@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List Customer</title>
+    <th:block th:replace="layout/head :: head"/>
+</head>
+<body>
+<div class="container">
+    <header>
+        <!-- As a link -->
+        <th:block th:replace="layout/banner :: banner-listBan"/>
+        <!-- As a heading -->
+    </header>
+
+    <div class="content">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Full name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Balance</th>
+                <th colspan="5">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="item:${customerBan}">
+                <tr>
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.fullName}"></td>
+                    <td th:text="${item.email}"></td>
+                    <td th:text="${item.phone}"></td>
+                    <td th:text="${item.address}"></td>
+                    <td th:text="${item.balance}"></td>
+                    <td>
+                        <a th:href="@{/customers/listBan/__${item.id}__}" onclick="return confirmUnBan()">
+                            <button class="btn btn-outline-danger">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+
+            </th:block>
+            <script>
+                function confirmUnBan() {
+                    return confirm("Bạn có muốn unban người này không?");
+                }
+            </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+<th:block th:if="${success == true}">
+    <footer class="container-fluid success">
+        <div class="container">
+            <div class="notification">
+                <p class="success" th:text="${message}"></p>
+            </div>
+        </div>
+    </footer>
+</th:block>
+</body>
+</html>

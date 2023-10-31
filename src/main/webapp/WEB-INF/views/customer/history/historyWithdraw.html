@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>History Withdraw</title>
+    <th:block th:replace="layout/head :: head"/>
+</head>
+<body>
+<div class="container">
+    <header>
+
+
+        <!-- As a link -->
+        <th:block th:replace="layout/banner :: banner-history-withdraw"/>
+        <!-- As a heading -->
+    </header>
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Full name</th>
+                <th>Transaction Amount</th>
+                <th>Transaction Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="item:${withdraws}">
+                <tr>
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.customer.fullName}"></td>
+                    <td th:text="${item.transactionAmount}"></td>
+                    <td th:text="${item.localDateTime}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

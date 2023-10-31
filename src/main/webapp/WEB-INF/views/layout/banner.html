@@ -1,0 +1,84 @@
+<th:block th:fragment="banner-list">
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">List Customer</a>
+            <div class="d-flex" style="gap: 10px;">
+                <a href="/customers/listBan">
+                    <button type="button" class="btn btn-outline-light">
+                        <i class="fas fa-list-ul"></i>
+                        List Ban
+                    </button>
+                </a>
+                <th:block th:replace="layout/fromHistory :: fromHistory"/>
+                <a href="/customers/create">
+                    <button type="button" class="btn btn-outline-light">
+                        <i class="far fa-plus-square"></i>
+                        Add New Customer
+                    </button>
+                </a>
+            </div>
+        </div>
+    </nav>
+</th:block>
+<th:block th:fragment="banner-listBan">
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/customers">List Ban Customer</a>
+            <div class="d-flex" style="gap: 10px;">
+                <a href="">
+                    <button type="button" class="btn btn-outline-light">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                </a>
+                <th:block th:replace="layout/fromHistory :: fromHistory"/>
+            </div>
+        </div>
+    </nav>
+</th:block>
+
+<th:block th:fragment="banner-history-deposit">
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/customers">History Deposit</a>
+            <div class="d-flex" style="gap: 10px;">
+                <a href="/customers">
+                    <button type="button" class="btn btn-outline-light">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                </a>
+            </div>
+        </div>
+    </nav>
+</th:block>
+<th:block th:fragment="banner-history-withdraw">
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/customers">History Withdraw</a>
+            <div class="d-flex" style="gap: 10px;">
+                <a href="/customers">
+                    <button type="button" class="btn btn-outline-light">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                </a>
+            </div>
+        </div>
+    </nav>
+</th:block>
+<th:block th:fragment="banner-history-transfer">
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/customers">History Transfer</a>
+            <div class="d-flex" style="gap: 10px;">
+                <a href="/customers">
+                    <button type="button" class="btn btn-outline-light">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                </a>
+            </div>
+        </div>
+    </nav>
+</th:block>

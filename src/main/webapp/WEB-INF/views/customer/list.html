@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List Customer</title>
+    <th:block th:replace="layout/head :: head"/>
+</head>
+<body>
+<div class="container">
+    <header>
+
+
+        <!-- As a link -->
+        <th:block th:replace="layout/banner :: banner-list"/>
+        <!-- As a heading -->
+    </header>
+
+    <div class="content">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Full name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Balance</th>
+                <th colspan="5">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="item:${customers}">
+                <tr>
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.fullName}"></td>
+                    <td th:text="${item.email}"></td>
+                    <td th:text="${item.phone}"></td>
+                    <td th:text="${item.address}"></td>
+                    <td th:text="${item.balance}"></td>
+                    <td>
+                        <a th:href="@{/customers/update/__${item.id}__}">
+                            <button class="btn btn-outline-secondary">
+                                <i class="far fa-edit"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{/customers/deposit/__${item.id}__}">
+                            <button class="btn btn-outline-success">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{/customers/withdraw/__${item.id}__}">
+                            <button class="btn btn-outline-warning">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{/customers/transfer/__${item.id}__}">
+                            <button class="btn btn-outline-primary">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{/customers/delete/__${item.id}__}" onclick="return confirmDelete()">
+                            <button class="btn btn-outline-danger">
+                                <i class="fas fa-ban"></i>
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+
+            </th:block>
+            <script>
+                function confirmDelete() {
+                    return confirm("Bạn có muốn block người này không?");
+                }
+            </script>
+            </tbody>
+        </table>
+    </div>
+</div>
+<th:block th:if="${success == true}">
+    <footer class="container-fluid success">
+        <div class="container">
+            <div class="notification">
+                <p class="success" th:text="${message}"></p>
+            </div>
+        </div>
+    </footer>
+</th:block>
+</body>
+</html>

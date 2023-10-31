@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>History Transfer</title>
+    <th:block th:replace="layout/head :: head"/>
+</head>
+<body>
+<div class="container">
+    <header>
+
+
+        <!-- As a link -->
+        <th:block th:replace="layout/banner :: banner-history-transfer"/>
+        <!-- As a heading -->
+    </header>
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name Sender</th>
+                <th>Transfer Money</th>
+                <th>Name Recipient</th>
+                <th>Received Money</th>
+                <th>Transaction Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="item:${transfers}">
+                <tr>
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.sender.fullName}"></td>
+                    <td th:text="${item.transactionAmount}"></td>
+                    <td th:text="${item.recipient.fullName}"></td>
+                    <td th:text="${item.transferAmount}"></td>
+                    <td th:text="${#calendars.format(item.dateTransfer, 'MM/dd/yyyy')}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

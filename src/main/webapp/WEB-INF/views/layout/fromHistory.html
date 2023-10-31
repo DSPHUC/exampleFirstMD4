@@ -1,0 +1,25 @@
+<th:block th:fragment="fromHistory">
+    <form id="history">
+        <button type="button" form="history" class="btn btn-outline-light" >
+            <div style=" display: flex;justify-content: center;align-items: center;">
+                <i class="fas fa-history" style="margin-right: 10px;"></i>
+                <select class="form-control" onchange="redirectToSelectedOption()">
+                    <option>Select History</option>
+                    <option value="/customers/history-transfer">History Transfer</option>
+                    <option value="/customers/history-deposit">History Deposit</option>
+                    <option value="/customers/history-withdraw">History Withdraw</option>
+                </select>
+            </div>
+        </button>
+    </form>
+
+    <script>
+        function redirectToSelectedOption() {
+            const selectElement = document.querySelector("#history select");
+            const selectedOption = selectElement.value;
+            if (selectedOption) {
+                window.location.href = selectedOption;
+            }
+        }
+    </script>
+</th:block>
