@@ -33,7 +33,9 @@
                     <td th:text="${item.transactionAmount}"></td>
                     <td th:text="${item.recipient.fullName}"></td>
                     <td th:text="${item.transferAmount}"></td>
-                    <td th:text="${#calendars.format(item.dateTransfer, 'MM/dd/yyyy')}"></td>
+                    <td th:text="${item.dateTransfer}"></td>
+<!--                    <td th:text="${#dates.format(item.dateTransfer, 'dd-MM-yyyy/HH:mm:ss')}"></td>-->
+<!--                    <td th:text="${formattedTimes[__${itemStat.index}__]}"></td>-->
                 </tr>
             </th:block>
             </tbody>

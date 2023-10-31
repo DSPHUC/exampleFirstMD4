@@ -17,4 +17,8 @@ public interface ICustomerService extends IGeneralService<Customer, Long> {
 
     void transfer(Transfer transfer);
     void  restore( Long id);
+
+    Deposit findDepositByCustomerId(Long customerId);
+
+    Withdraw findWithdrawByCustomerId(Long customerId);
 }

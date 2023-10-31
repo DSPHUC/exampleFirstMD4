@@ -25,8 +25,8 @@ public class Deposit {
     private Customer customer;
 
     private BigDecimal transactionAmount;
-    private Boolean deleted;
-    private LocalDateTime localDateTime;
+    private Boolean deleted = false;
+    private LocalDateTime localDateTime = LocalDateTime.now();
 
 
 }

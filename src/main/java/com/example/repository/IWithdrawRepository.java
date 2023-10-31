@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IWithdrawRepository extends JpaRepository<Withdraw,Long> {
+    Withdraw findWithdrawByCustomerId(long customer_id);
 }

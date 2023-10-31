@@ -32,7 +32,6 @@ public class Transfer {
     private BigDecimal feesAmount;
     private BigDecimal transactionAmount;
 
-    @DateTimeFormat(pattern="dd-MM-YYYY")
     private LocalDateTime dateTransfer = LocalDateTime.now();
     private Boolean deleted = false;
 

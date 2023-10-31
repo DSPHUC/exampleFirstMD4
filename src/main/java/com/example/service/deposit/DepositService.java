@@ -17,12 +17,13 @@ import java.util.stream.Collectors;
 public class DepositService implements IDepositService {
 
     private IDepositRepository depositRepository;
+
     @Override
     public List<Deposit> findAll(boolean deleted) {
         return depositRepository
                 .findAll()
                 .stream()
-                .filter(deposit -> deposit.getDeleted()==deleted)
+                .filter(deposit -> deposit.getDeleted() == deleted)
                 .collect(Collectors.toList());
     }
 

@@ -16,12 +16,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/customers")
-@Transactional
 public class CustomerController {
     private final ICustomerService customerService;
     private final IDepositService depositService;
@@ -82,11 +84,10 @@ public class CustomerController {
 
     @PostMapping("/update/{id}")
     public String updateCustomer(Model model, @PathVariable Long id, @ModelAttribute Customer customer) {
-        Optional<Customer> customerOptional = customerService.findById(id);
-        Customer customer1 = customerOptional.get();
-        customerService.update(id, customer1);
+        customerService.update(id, customer);
         model.addAttribute("message", "Updated successfully");
         model.addAttribute("success", true);
+        model.addAttribute("customerUpdate", customer);
         return "customer/edit";
     }
 
@@ -116,9 +117,9 @@ public class CustomerController {
         return "customer/deposit";
     }
 
-    @PostMapping("/deposit/{id}")
-    public String deposit(Model model, @PathVariable Long id, @ModelAttribute Deposit deposit) {
-        Optional<Customer> customerOptional = customerService.findById(id);
+    @PostMapping("/deposit/{customerId}")
+    public String deposit(Model model, @PathVariable Long customerId, @ModelAttribute Deposit deposit) {
+        Optional<Customer> customerOptional = customerService.findById(customerId);
         Customer customer = customerOptional.get();
 
         deposit.setCustomer(customer);
@@ -126,9 +127,11 @@ public class CustomerController {
 
         deposit.setTransactionAmount(null);
 
+        Customer customerNew = customerService.findById(customerId).get();
+        deposit.setCustomer(customerNew);
         model.addAttribute("deposit", deposit);
 
-        model.addAttribute("message", "Deposit successfully is" + "money");
+        model.addAttribute("message", "Deposit successfully ");
         model.addAttribute("success", true);
         return "customer/deposit";
     }
@@ -143,18 +146,20 @@ public class CustomerController {
         return "customer/withdraw";
     }
 
-    @PostMapping("/withdraw/{id}")
-    public String withdraw(Model model, @PathVariable Long id, @ModelAttribute Withdraw withdraw) {
-        Optional<Customer> customerOptional = customerService.findById(id);
+    @PostMapping("/withdraw/{customerId}")
+    public String withdraw(Model model, @PathVariable Long customerId, @ModelAttribute Withdraw withdraw) {
+        Optional<Customer> customerOptional = customerService.findById(customerId);
         Customer customer = customerOptional.get();
+
         withdraw.setCustomer(customer);
         customerService.withdraw(withdraw);
 
         withdraw.setTransactionAmount(null);
-
+        Customer customerNew = customerService.findById(customerId).get();
+        withdraw.setCustomer(customerNew);
         model.addAttribute("withdraw", withdraw);
 
-        model.addAttribute("message", "Withdraw successfully is" + "money");
+        model.addAttribute("message", "Withdraw successfully ");
         model.addAttribute("success", true);
         return "customer/withdraw";
     }
@@ -209,9 +214,19 @@ public class CustomerController {
 
     @GetMapping("/history-transfer")
     public String showHistoryTransferPage(Model model) {
+        List<Customer> customers = customerService.findAll(false);
         List<Transfer> transfers = transferService.findAll(false);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        List<String> formattedTimes = new ArrayList<>();
+        for (Transfer transfer : transfers) {
+            LocalDateTime time = transfer.getDateTransfer();
+            String formattedTime = time.format(formatter);
+            transfer.setDateTransfer(LocalDateTime.parse(formattedTime, formatter));
+            formattedTimes.add(formattedTime);
+        }
+        model.addAttribute("customers", customers);
         model.addAttribute("transfers", transfers);
-
+        model.addAttribute("formattedTimes", formattedTimes);
         return "customer/history/historyTransfer";
     }
 

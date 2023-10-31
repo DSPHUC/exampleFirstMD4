@@ -21,11 +21,11 @@ public class Withdraw {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id",referencedColumnName = "id",nullable = false)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
     private BigDecimal transactionAmount;
-    private Boolean deleted;
-    private LocalDateTime localDateTime;
+    private Boolean deleted = false;
+    private LocalDateTime localDateTime = LocalDateTime.now();
 
 
 }

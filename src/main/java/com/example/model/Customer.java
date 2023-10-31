@@ -28,7 +28,11 @@ public class Customer {
     private String email;
     private String phone;
     private String address;
+
+    @Column(updatable = false)
     private BigDecimal balance;
+
+    @Column(updatable = false)
     private Boolean deleted = false;
 
 

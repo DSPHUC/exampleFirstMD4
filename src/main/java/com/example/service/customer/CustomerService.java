@@ -61,15 +61,15 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void update(Long id, Customer customer) {
-        Optional<Customer> customerOptional = customerRepository.findById(id);
-        Customer customer1 = customerOptional.get();
+//        Optional<Customer> customerOptional = findById(id);
+//         customer = customerOptional.get();
+            customer.setId(id);
+//        customerUpdate.setFullName(customer.getFullName());
+//        customerUpdate.setEmail(customer.getEmail());
+//        customerUpdate.setPhone(customer.getPhone());
+//        customerUpdate.setAddress(customer.getAddress());
 
-        customer1.setFullName(customer.getFullName());
-        customer1.setEmail(customer.getEmail());
-        customer1.setPhone(customer.getPhone());
-        customer1.setAddress(customer.getAddress());
-
-        customerRepository.save(customer1);
+        customerRepository.save(customer);
 
 //        int index = customers.indexOf(findById(id));
 //        customers.set(index, customer);
@@ -88,28 +88,40 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void deposit(Deposit deposit) {
-        Customer customer = deposit.getCustomer();
-        BigDecimal currentBalance = customer.getBalance();
-        BigDecimal transactionAmount = deposit.getTransactionAmount();
-        BigDecimal newBalance = currentBalance.add(transactionAmount);
-        customer.setBalance(newBalance);
-
-        update(customer.getId(), customer);
-        deposit.setLocalDateTime(LocalDateTime.now());
-        deposit.setDeleted(false);
+//        Customer customer = deposit.getCustomer();
+//        BigDecimal currentBalance = customer.getBalance();
+//        BigDecimal transactionAmount = deposit.getTransactionAmount();
+//        BigDecimal newBalance = currentBalance.add(transactionAmount);
+//        customer.setBalance(newBalance);
+//
+//        update(customer.getId(), customer);
+//        deposit.setLocalDateTime(LocalDateTime.now());
+//        deposit.setDeleted(false);
+        customerRepository.incrementBalance(deposit.getCustomer().getId(),deposit.getTransactionAmount());
         depositRepository.save(deposit);
 
     }
 
     @Override
-    public void withdraw(Withdraw withdraw) {
-        Customer customer = withdraw.getCustomer();
-        BigDecimal currentBalance = customer.getBalance();
-        BigDecimal transactionAmount = withdraw.getTransactionAmount();
-        BigDecimal newBalance = currentBalance.subtract(transactionAmount);
-        customer.setBalance(newBalance);
+    public Deposit findDepositByCustomerId(Long customerId) {
+        return depositRepository.findDepositByCustomerId(customerId);
+    }
 
-        update(customer.getId(), customer);
+    @Override
+    public Withdraw findWithdrawByCustomerId(Long customerId) {
+        return withdrawRepository.findWithdrawByCustomerId(customerId);
+    }
+
+    @Override
+    public void withdraw(Withdraw withdraw) {
+//        Customer customer = withdraw.getCustomer();
+//        BigDecimal currentBalance = customer.getBalance();
+//        BigDecimal transactionAmount = withdraw.getTransactionAmount();
+//        BigDecimal newBalance = currentBalance.subtract(transactionAmount);
+//        customer.setBalance(newBalance);
+//
+//        update(customer.getId(), customer);
+        customerRepository.reduceBalance(withdraw.getCustomer().getId(),withdraw.getTransactionAmount());
         withdrawRepository.save(withdraw);
     }
 
@@ -135,9 +147,10 @@ public class CustomerService implements ICustomerService {
         sender.setBalance(newSenderBalance);
         BigDecimal newRecipientBalance = recipientBalance.add(transferAmount);
         recipient.setBalance(newRecipientBalance);
-
-        customerRepository.save(sender);
-        customerRepository.save(recipient);
+        customerRepository.incrementBalance(recipient.getId(),transferAmount );
+        customerRepository.reduceBalance(sender.getId(),transactionAmount);
+//        customerRepository.save(sender);
+//        customerRepository.save(recipient);
 
         transferRepository.save(transfer);
     }
