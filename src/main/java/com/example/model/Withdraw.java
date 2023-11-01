@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "withdraws")
-public class Withdraw {
+public class Withdraw implements Validator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -28,4 +30,20 @@ public class Withdraw {
     private LocalDateTime localDateTime = LocalDateTime.now();
 
 
+    @Override
+    public boolean supports(Class<?> aClass) {
+        return false;
+    }
+
+    @Override
+    public void validate(Object o, Errors errors) {
+        Withdraw withdraw = (Withdraw) o;
+        BigDecimal transactionAmount = withdraw.transactionAmount;
+
+        if (transactionAmount.compareTo(BigDecimal.valueOf(1000))< 0) {
+            errors.rejectValue("transactionAmount","withdraw.transactionAmount.min");
+            return;
+        }
+
+    }
 }

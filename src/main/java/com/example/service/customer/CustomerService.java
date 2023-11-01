@@ -61,24 +61,17 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void update(Long id, Customer customer) {
-//        Optional<Customer> customerOptional = findById(id);
-//         customer = customerOptional.get();
-            customer.setId(id);
-//        customerUpdate.setFullName(customer.getFullName());
-//        customerUpdate.setEmail(customer.getEmail());
-//        customerUpdate.setPhone(customer.getPhone());
-//        customerUpdate.setAddress(customer.getAddress());
-
+        customer.setId(id);
         customerRepository.save(customer);
-
-//        int index = customers.indexOf(findById(id));
-//        customers.set(index, customer);
 
     }
 
     @Override
     public void removeById(Long id) {
-        customerRepository.findById(id).ifPresent(customer -> customer.setDeleted(true));
+        Optional<Customer> customerOptional = findById(id);
+        Customer customer = customerOptional.get();
+        customer.setDeleted(true);
+        customerRepository.save(customer);
     }
 
     @Override
@@ -88,16 +81,7 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void deposit(Deposit deposit) {
-//        Customer customer = deposit.getCustomer();
-//        BigDecimal currentBalance = customer.getBalance();
-//        BigDecimal transactionAmount = deposit.getTransactionAmount();
-//        BigDecimal newBalance = currentBalance.add(transactionAmount);
-//        customer.setBalance(newBalance);
-//
-//        update(customer.getId(), customer);
-//        deposit.setLocalDateTime(LocalDateTime.now());
-//        deposit.setDeleted(false);
-        customerRepository.incrementBalance(deposit.getCustomer().getId(),deposit.getTransactionAmount());
+        customerRepository.incrementBalance(deposit.getCustomer().getId(), deposit.getTransactionAmount());
         depositRepository.save(deposit);
 
     }
@@ -114,14 +98,7 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void withdraw(Withdraw withdraw) {
-//        Customer customer = withdraw.getCustomer();
-//        BigDecimal currentBalance = customer.getBalance();
-//        BigDecimal transactionAmount = withdraw.getTransactionAmount();
-//        BigDecimal newBalance = currentBalance.subtract(transactionAmount);
-//        customer.setBalance(newBalance);
-//
-//        update(customer.getId(), customer);
-        customerRepository.reduceBalance(withdraw.getCustomer().getId(),withdraw.getTransactionAmount());
+        customerRepository.reduceBalance(withdraw.getCustomer().getId(), withdraw.getTransactionAmount());
         withdrawRepository.save(withdraw);
     }
 
@@ -147,8 +124,8 @@ public class CustomerService implements ICustomerService {
         sender.setBalance(newSenderBalance);
         BigDecimal newRecipientBalance = recipientBalance.add(transferAmount);
         recipient.setBalance(newRecipientBalance);
-        customerRepository.incrementBalance(recipient.getId(),transferAmount );
-        customerRepository.reduceBalance(sender.getId(),transactionAmount);
+        customerRepository.incrementBalance(recipient.getId(), transferAmount);
+        customerRepository.reduceBalance(sender.getId(), transactionAmount);
 //        customerRepository.save(sender);
 //        customerRepository.save(recipient);
 

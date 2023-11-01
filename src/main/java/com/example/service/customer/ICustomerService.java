@@ -11,12 +11,14 @@ import java.util.Optional;
 
 public interface ICustomerService extends IGeneralService<Customer, Long> {
     void deposit(Deposit deposit);
+
     List<Customer> findAllWithoutId(Long id);
 
     void withdraw(Withdraw withdraw);
 
     void transfer(Transfer transfer);
-    void  restore( Long id);
+
+    void restore(Long id);
 
     Deposit findDepositByCustomerId(Long customerId);
 

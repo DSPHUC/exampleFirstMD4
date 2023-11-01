@@ -1,0 +1,47 @@
+<th:block th:fragment="message-success">
+    <th:block th:if="${success == true}">
+        <footer class="container-fluid success">
+            <div class="container">
+                <div class="notification">
+                    <p class="success" th:text="${message}"></p>
+                </div>
+            </div>
+        </footer>
+    </th:block>
+    <th:block th:if="${success == false}">
+        <footer class="container-fluid error">
+            <div class="container">
+                <th:block th:if="${error} == true">
+                    <ul class="list-styled">
+                        <th:block th:replace="layout/message :: message-error"/>
+                    </ul>
+                </th:block>
+                <th:block>
+                    <div class="notification">
+                        <p class="success" th:text="${message}"></p>
+                    </div>
+                </th:block>
+            </div>
+        </footer>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="message-error">
+
+    <th:block th:if="${checkCustomer} == true">
+        <li th:each="err : ${#fields.errors('customer.*')}" th:text="${err}"></li>
+    </th:block>
+
+    <th:block th:if="${checkDeposit} == true">
+        <li th:each="err : ${#fields.errors('deposit.*')}" th:text="${err}"></li>
+    </th:block>
+
+    <th:block th:if="${checkWithdraw} == true">
+        <li th:each="err : ${#fields.errors('withdraw.*')}" th:text="${err}"></li>
+    </th:block>
+
+    <th:block th:if="${checktransfer} == true">
+        <li th:each="err : ${#fields.errors('transfer.*')}" th:text="${err}"></li>
+    </th:block>
+
+</th:block>

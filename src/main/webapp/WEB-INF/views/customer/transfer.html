@@ -75,15 +75,7 @@
     </div>
 </div>
 
-<th:block th:if="${success == false}">
-    <footer class="container-fluid error" id="notification">
-        <div class="container">
-            <div class="notification">
-                <p class="error" th:text="${message}"></p>
-            </div>
-        </div>
-    </footer>
-</th:block>
+<th:block th:replace="layout/message ::message-success"/>
 
 <script src="/assets/js/custom-scrip.js"></script>
 

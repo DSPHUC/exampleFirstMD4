@@ -1,70 +1,62 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Withdraw Customer</title>
-  <th:block th:replace="layout/head :: head"/>
+    <title>Withdraw Customer</title>
+    <th:block th:replace="layout/head :: head"/>
 </head>
 <body>
 <div class="container">
-  <header>
-    <nav class="navbar bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand">Withdraw money into customer's account </a>
-        <div class="d-flex" style="gap: 10px;">
-          <a href="/customers">
-            <button class="btn btn-outline-light" type="button">
-              <i class="fas fa-list-ul"></i>
-              Customers list
-            </button>
-          </a>
-        </div>
-      </div>
-    </nav>
-  </header>
-  <div class="content">
-    <form th:object="${withdraw}" method="post">
-      <div class="row mb-3 mt-3">
-        <div class="col-lg-6">
-          <label for="fullName" class="form-label">Full Name</label>
-          <input type="text" class="form-control" id="fullName" th:field="*{customer.fullName}" readonly>
-        </div>
-        <div class="col-lg-6">
-          <label for="id" class="form-label">Email</label>
-          <input type="email" class="form-control" id="id" th:field="*{customer.email}" readonly>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-lg-6">
-          <label for="transactionAmountCurrent" class="form-label">Customer balance ($)</label>
-          <input type="text" class="form-control" id="transactionAmountCurrent" th:value="*{customer.balance}" disabled>
-        </div>
-        <div class="col-lg-6">
-          <label for="transactionAmountReduce" class="form-label">Transaction Amount ($)</label>
-          <input type="number" class="form-control" id="transactionAmountReduce"
-                 th:field="*{transactionAmount}">
-        </div>
-      </div>
+    <header>
+        <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand">Withdraw money into customer's account </a>
+                <div class="d-flex" style="gap: 10px;">
+                    <a href="/customers">
+                        <button class="btn btn-outline-light" type="button">
+                            <i class="fas fa-list-ul"></i>
+                            Customers list
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="content">
+        <form th:object="${withdraw}" method="post">
+            <div class="row mb-3 mt-3">
+                <div class="col-lg-6">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" th:field="*{customer.fullName}" readonly>
+                </div>
+                <div class="col-lg-6">
+                    <label for="id" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="id" th:field="*{customer.email}" readonly>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-lg-6">
+                    <label for="transactionAmountCurrent" class="form-label">Customer balance ($)</label>
+                    <input type="text" class="form-control" id="transactionAmountCurrent" th:value="*{customer.balance}"
+                           readonly>
+                </div>
+                <div class="col-lg-6">
+                    <label for="transactionAmountReduce" class="form-label">Transaction Amount ($)</label>
+                    <input type="number" class="form-control" id="transactionAmountReduce"
+                           th:field="*{transactionAmount}">
+                </div>
+            </div>
 
-      <div class="row pt-3">
-        <div class="col-lg-3">
-          <button type="submit" class="btn btn-outline-warning">
-            <i class="fas fa-minus"></i>
-            Withdraw
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-<th:block th:if="${success == true}">
-  <footer class="container-fluid success">
-    <div class="container">
-      <div class="notification">
-        <p class="success" th:text="${message}"></p>
-      </div>
+            <div class="row pt-3">
+                <div class="col-lg-3">
+                    <button type="submit" class="btn btn-outline-warning">
+                        <i class="fas fa-minus"></i>
+                        Withdraw
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
-  </footer>
-</th:block>
-
+</div>
+<th:block th:replace="layout/message ::message-success"/>
 </body>
 </html>

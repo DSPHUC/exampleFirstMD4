@@ -65,8 +65,8 @@
                         </a>
                     </td>
                     <td>
-                        <a th:href="@{/customers/delete/__${item.id}__}" onclick="return confirmDelete()">
-                            <button class="btn btn-outline-danger">
+                        <a th:href="@{/customers/delete/__${item.id}__}">
+                            <button class="btn btn-outline-danger" onclick="return confirmDelete()">
                                 <i class="fas fa-ban"></i>
                             </button>
                         </a>
@@ -83,14 +83,6 @@
         </table>
     </div>
 </div>
-<th:block th:if="${success == true}">
-    <footer class="container-fluid success">
-        <div class="container">
-            <div class="notification">
-                <p class="success" th:text="${message}"></p>
-            </div>
-        </div>
-    </footer>
-</th:block>
+<th:block th:replace="layout/message ::message-success"/>
 </body>
 </html>

@@ -10,11 +10,14 @@ import com.example.service.transfer.ITransferService;
 import com.example.service.withdraw.IWithdrawService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,17 +48,10 @@ public class CustomerController {
     }
 
     @GetMapping("/listBan")
-    public ModelAndView listBan(@ModelAttribute Customer customer) {
-        ModelAndView modelAndView = new ModelAndView("customer/listBan");
+    public String listBan(Model model) {
         List<Customer> customers = customerService.findAll(true);
-        modelAndView.addObject("customerBan", customers);
-        return modelAndView;
-    }
-
-    @PostMapping("/listBan")
-    public String listBanCustomer(@ModelAttribute Customer customer, Model model) {
-
-        return null;
+        model.addAttribute("customerBan", customers);
+        return "customer/listBan";
     }
 
     @GetMapping("/create")
@@ -65,7 +61,16 @@ public class CustomerController {
     }
 
     @PostMapping("/create")
-    public String createCustomer(@ModelAttribute Customer customer, Model model) {
+    public String createCustomer(@ModelAttribute Customer customer, Model model, BindingResult bindingResult) {
+        new Customer().validate(customer, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("success", false);
+            model.addAttribute("message", "Created unsuccessful");
+            model.addAttribute("error", true);
+            model.addAttribute("checkCustomer", true);
+            model.addAttribute("customer", customer);
+            return "customer/create";
+        }
         customerService.create(customer);
         model.addAttribute("success", true);
         model.addAttribute("message", "Created successfully");
@@ -82,9 +87,18 @@ public class CustomerController {
         return modelAndView;
     }
 
-    @PostMapping("/update/{id}")
-    public String updateCustomer(Model model, @PathVariable Long id, @ModelAttribute Customer customer) {
-        customerService.update(id, customer);
+    @PostMapping("/update/{idCustomer}")
+    public String updateCustomer(Model model, @PathVariable Long idCustomer, @ModelAttribute Customer customer, BindingResult bindingResult) {
+        new Customer().validate(customer, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("success", false);
+            model.addAttribute("message", "Updated unsuccessful");
+            model.addAttribute("error", true);
+            model.addAttribute("checkCustomer", true);
+            model.addAttribute("customerUpdate", customer);
+            return "customer/edit";
+        }
+        customerService.update(idCustomer, customer);
         model.addAttribute("message", "Updated successfully");
         model.addAttribute("success", true);
         model.addAttribute("customerUpdate", customer);
@@ -96,12 +110,12 @@ public class CustomerController {
         customerService.restore(id);
         redirectAttributes.addFlashAttribute("success", true);
         redirectAttributes.addFlashAttribute("message", "Unban successfully");
-        return "redirect:";
+        return "redirect:/customers/listBan";
     }
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable long id, RedirectAttributes redirectAttributes) {
-        customerService.removeById(id);
+    @GetMapping("/delete/{idCustomer}")
+    public String delete(@PathVariable long idCustomer, RedirectAttributes redirectAttributes) {
+        customerService.removeById(idCustomer);
         redirectAttributes.addFlashAttribute("success", true);
         redirectAttributes.addFlashAttribute("message", "Ban successfully");
         return "redirect:/customers";
@@ -118,11 +132,21 @@ public class CustomerController {
     }
 
     @PostMapping("/deposit/{customerId}")
-    public String deposit(Model model, @PathVariable Long customerId, @ModelAttribute Deposit deposit) {
+    public String deposit(Model model, @PathVariable Long customerId, @ModelAttribute Deposit deposit, BindingResult bindingResult) {
+        new Deposit().validate(deposit, bindingResult);
         Optional<Customer> customerOptional = customerService.findById(customerId);
         Customer customer = customerOptional.get();
 
         deposit.setCustomer(customer);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("success", false);
+            model.addAttribute("message", "Deposit unsuccessful");
+            model.addAttribute("error", true);
+            model.addAttribute("checkDeposit", true);
+            model.addAttribute("deposit", deposit);
+            return "customer/deposit";
+        }
         customerService.deposit(deposit);
 
         deposit.setTransactionAmount(null);
@@ -147,11 +171,28 @@ public class CustomerController {
     }
 
     @PostMapping("/withdraw/{customerId}")
-    public String withdraw(Model model, @PathVariable Long customerId, @ModelAttribute Withdraw withdraw) {
+    public String withdraw(Model model, @PathVariable Long customerId
+            , @ModelAttribute Withdraw withdraw, BindingResult bindingResult) {
+        new Withdraw().validate(withdraw, bindingResult);
         Optional<Customer> customerOptional = customerService.findById(customerId);
         Customer customer = customerOptional.get();
 
         withdraw.setCustomer(customer);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("success", false);
+            model.addAttribute("message", "Withdraw unsuccessful");
+            model.addAttribute("error", true);
+            model.addAttribute("checkWithdraw", true);
+            model.addAttribute("withdraw", withdraw);
+            return "customer/withdraw";
+        }
+        if (withdraw.getTransactionAmount().compareTo(customer.getBalance()) > 0) {
+            model.addAttribute("success", false);
+            model.addAttribute("message", "Withdraw unsuccessful");
+            model.addAttribute("error", true);
+            model.addAttribute("checkWithdraw", true);
+            return "customer/withdraw";
+        }
         customerService.withdraw(withdraw);
 
         withdraw.setTransactionAmount(null);
@@ -180,7 +221,8 @@ public class CustomerController {
 
     @PostMapping("/transfer/{senderId}")
     public String transfer(@PathVariable Long senderId, @ModelAttribute Transfer transfer
-            , Model model, RedirectAttributes redirectAttributes) {
+            , Model model, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+        new Transfer().validate(transfer, bindingResult);
         List<Customer> recipients = customerService.findAllWithoutId(senderId);
         Optional<Customer> customerOptional = customerService.findById(senderId);
         Customer customer = customerOptional.get();
@@ -188,7 +230,14 @@ public class CustomerController {
         Customer recipient = customerRecipient.get();
         transfer.setSender(customer);
         transfer.setRecipient(recipient);
-
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("success", false);
+            model.addAttribute("message", "Transfer unsuccessful");
+            model.addAttribute("error", true);
+            model.addAttribute("checkTransfer", true);
+            model.addAttribute("transfer", transfer);
+            return "customer/transfer";
+        }
         if (transfer.getTransferAmount().compareTo(BigDecimal.ZERO) == 0) {
             model.addAttribute("success", false);
             model.addAttribute("message", "Transfer amount must be greater than 0");
