@@ -26,9 +26,11 @@ public class Withdraw implements Validator {
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
-    @Column(precision = 10,scale = 2, nullable = false)
+    @Column(name = "transaction_amount",precision = 10,scale = 2, nullable = false)
     private BigDecimal transactionAmount;
     private Boolean deleted = false;
+
+    @Column(name = "time_withdraw")
     private LocalDateTime localDateTime = LocalDateTime.now();
 
 

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -23,23 +22,28 @@ public class Transfer implements Validator {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "sender_id", referencedColumnName = "id", nullable = false)
     private Customer sender;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "recipient_id", referencedColumnName = "id", nullable = false)
     private Customer recipient;
 
-    @Column(precision = 10,scale = 2, nullable = false)
+    @Column(name = "transfer_amount",precision = 10,scale = 2, nullable = false)
     private BigDecimal transferAmount;
+
     private Long fees;
 
-    @Column(precision = 10,scale = 2, nullable = false)
+    @Column(name = "fees_amount",precision = 10,scale = 2, nullable = false)
     private BigDecimal feesAmount;
 
-    @Column(precision = 10,scale = 2, nullable = false)
+    @Column(name = "transaction_amount",precision = 10,scale = 2, nullable = false)
     private BigDecimal transactionAmount;
 
+    @Column(name = "time_transfer")
     private LocalDateTime dateTransfer = LocalDateTime.now();
+
     private Boolean deleted = false;
 
 
