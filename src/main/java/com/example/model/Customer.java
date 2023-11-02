@@ -29,7 +29,7 @@ public class Customer implements Validator {
     private String phone;
     private String address;
 
-    @Column(updatable = false)
+    @Column(precision = 10,scale = 2, nullable = false, updatable = false)
     private BigDecimal balance;
 
 
@@ -48,7 +48,7 @@ public class Customer implements Validator {
         String email = customer.email;
         String phone = customer.phone;
         String address = customer.address;
-        if (fullName.isEmpty()||fullName == null || fullName.length() < 3) {
+        if ( fullName.length() < 3) {
             errors.rejectValue("fullName", "customer.fullName.notNull"
                     , "fullName Not empty or less than 3");
             return;

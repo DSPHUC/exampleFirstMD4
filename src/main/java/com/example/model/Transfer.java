@@ -29,9 +29,14 @@ public class Transfer implements Validator {
     @OneToOne
     private Customer recipient;
 
+    @Column(precision = 10,scale = 2, nullable = false)
     private BigDecimal transferAmount;
     private Long fees;
+
+    @Column(precision = 10,scale = 2, nullable = false)
     private BigDecimal feesAmount;
+
+    @Column(precision = 10,scale = 2, nullable = false)
     private BigDecimal transactionAmount;
 
     private LocalDateTime dateTransfer = LocalDateTime.now();
@@ -48,15 +53,16 @@ public class Transfer implements Validator {
         Transfer transfer = (Transfer) o;
         BigDecimal transferAmount = transfer.transferAmount;
 
-        if (transferAmount == null) {
-            errors.rejectValue("transfer","transfer.transferAmount.null");
+        if (transferAmount == null ) {
+            errors.rejectValue("transferAmount", "transfer.transferAmount.null");
             return;
         }
         if (transferAmount.compareTo(BigDecimal.valueOf(1000)) < 0) {
-            errors.rejectValue("transfer","transfer.transferAmount.min");
+            errors.rejectValue("transferAmount", "transfer.transferAmount.min");
             return;
-        }if (transferAmount.compareTo(transfer.sender.getBalance()) > 0) {
-            errors.rejectValue("transfer","transfer.transferAmount.max");
+        }
+        if (transferAmount.compareTo(BigDecimal.valueOf(1000000000)) > 0) {
+            errors.rejectValue("transferAmount", "transfer.transferAmount.max");
         }
     }
 }

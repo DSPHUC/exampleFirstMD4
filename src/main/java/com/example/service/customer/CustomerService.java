@@ -1,5 +1,6 @@
 package com.example.service.customer;
 
+//import com.example.exception.ResourceNotFoundException;
 import com.example.model.Customer;
 import com.example.model.Deposit;
 import com.example.model.Transfer;
@@ -41,6 +42,8 @@ public class CustomerService implements ICustomerService {
     @Override
     public Optional<Customer> findById(Long id) {
         return customerRepository.findById(id).filter(customer -> !customer.getDeleted());
+//        return Optional.ofNullable(customerRepository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Sorry, no customer found with the Id :" + id)));
     }
 
     @Override

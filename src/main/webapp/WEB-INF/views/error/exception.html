@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:replace="layout/head"></th:block>
+    <title>Error Page</title>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="content" style="padding-left:50px; padding-right: 50px;margin-left: auto;margin-right: auto;">
+            <h1 th:text="${errorMsg}"></h1>
+            <div>
+                <a href="/customers">
+                    <button type="button" class="btn btn-danger">
+                        <i class="fas fa-arrow-left"></i>
+                        Back Customer
+                    </button>
+                </a>
+            </div>
+        </div>
+    </header>
+    <div class="content" style="padding-left:50px; padding-right: 50px;margin-left: auto;margin-right: auto;">
+        <img src="/assets/img/glitch-error-404-page_23-2148105404.png" alt="lỗi hệ thống">
+    </div>
+</div>
+</body>
+</html>

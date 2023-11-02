@@ -18,7 +18,7 @@
                 </th:block>
                 <th:block>
                     <div class="notification">
-                        <p class="success" th:text="${message}"></p>
+                        <p class="error" th:text="${message}"></p>
                     </div>
                 </th:block>
             </div>
@@ -40,7 +40,7 @@
         <li th:each="err : ${#fields.errors('withdraw.*')}" th:text="${err}"></li>
     </th:block>
 
-    <th:block th:if="${checktransfer} == true">
+    <th:block th:if="${checkTransfer} == true">
         <li th:each="err : ${#fields.errors('transfer.*')}" th:text="${err}"></li>
     </th:block>
 

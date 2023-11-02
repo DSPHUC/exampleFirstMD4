@@ -188,7 +188,7 @@ public class CustomerController {
         }
         if (withdraw.getTransactionAmount().compareTo(customer.getBalance()) > 0) {
             model.addAttribute("success", false);
-            model.addAttribute("message", "Withdraw unsuccessful");
+            model.addAttribute("message", "Insufficient balance to make a Withdraw");
             model.addAttribute("error", true);
             model.addAttribute("checkWithdraw", true);
             return "customer/withdraw";
@@ -207,7 +207,6 @@ public class CustomerController {
 
     @GetMapping("/transfer/{senderId}")
     public String showTransferPage(@PathVariable Long senderId, Model model) {
-
         Optional<Customer> customerOptional = customerService.findById(senderId);
         Customer sender = customerOptional.get();
         List<Customer> recipients = customerService.findAllWithoutId(senderId);
@@ -221,44 +220,40 @@ public class CustomerController {
 
     @PostMapping("/transfer/{senderId}")
     public String transfer(@PathVariable Long senderId, @ModelAttribute Transfer transfer
-            , Model model, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+            , BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+
         new Transfer().validate(transfer, bindingResult);
         List<Customer> recipients = customerService.findAllWithoutId(senderId);
         Optional<Customer> customerOptional = customerService.findById(senderId);
         Customer customer = customerOptional.get();
         Optional<Customer> customerRecipient = customerService.findById(transfer.getRecipient().getId());
         Customer recipient = customerRecipient.get();
-        transfer.setSender(customer);
-        transfer.setRecipient(recipient);
         if (bindingResult.hasErrors()) {
             model.addAttribute("success", false);
             model.addAttribute("message", "Transfer unsuccessful");
             model.addAttribute("error", true);
             model.addAttribute("checkTransfer", true);
             model.addAttribute("transfer", transfer);
-            return "customer/transfer";
-        }
-        if (transfer.getTransferAmount().compareTo(BigDecimal.ZERO) == 0) {
-            model.addAttribute("success", false);
-            model.addAttribute("message", "Transfer amount must be greater than 0");
-            model.addAttribute("transfer", transfer);
             model.addAttribute("recipients", recipients);
 
             return "customer/transfer";
-        } else if (transfer.getTransferAmount().compareTo(customer.getBalance()) > 0) {
+        }
+        if (transfer.getTransferAmount().compareTo(customer.getBalance()) > 0) {
             model.addAttribute("success", false);
             model.addAttribute("message", "Insufficient balance to make a Transfer");
             model.addAttribute("transfer", transfer);
             model.addAttribute("recipients", recipients);
 
             return "customer/transfer";
-        } else {
-            customerService.transfer(transfer);
-            redirectAttributes.addFlashAttribute("success", true);
-            redirectAttributes.addFlashAttribute("message", "Transfer successful");
-
-            return "redirect:/customers";
         }
+        transfer.setSender(customer);
+        transfer.setRecipient(recipient);
+        customerService.transfer(transfer);
+        redirectAttributes.addFlashAttribute("success", true);
+        redirectAttributes.addFlashAttribute("message", "Transfer successful");
+
+        return "redirect:/customers";
+
     }
 
     @GetMapping("/history-transfer")

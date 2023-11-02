@@ -26,6 +26,7 @@ public class Deposit implements Validator {
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
+    @Column(precision = 10,scale = 2, nullable = false)
     private BigDecimal transactionAmount;
     private Boolean deleted = false;
     private LocalDateTime localDateTime = LocalDateTime.now();
@@ -40,8 +41,14 @@ public class Deposit implements Validator {
     public void validate(Object o, Errors errors) {
         Deposit deposit = (Deposit) o;
         BigDecimal transactionAmount = deposit.transactionAmount;
-        if (transactionAmount.compareTo(BigDecimal.valueOf(1000)) < 0) {
+        if (transactionAmount == null || transactionAmount.compareTo(BigDecimal.valueOf(1000)) < 0) {
             errors.rejectValue("transactionAmount", "deposit.transactionAmount.min");
+            return;
         }
+        if (transactionAmount.compareTo(BigDecimal.valueOf(1000000000)) > 0) {
+            errors.rejectValue("transactionAmount", "deposit.transactionAmount.max");
+        }
+
+
     }
 }

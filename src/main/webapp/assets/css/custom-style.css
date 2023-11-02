@@ -42,3 +42,9 @@ footer.error {
 .notification p.error {
     color: #b05965;
 }
+button:hover {
+    cursor: pointer;
+}
+select:hover {
+    cursor: pointer;
+}

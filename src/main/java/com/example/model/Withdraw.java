@@ -25,6 +25,8 @@ public class Withdraw implements Validator {
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
+
+    @Column(precision = 10,scale = 2, nullable = false)
     private BigDecimal transactionAmount;
     private Boolean deleted = false;
     private LocalDateTime localDateTime = LocalDateTime.now();
@@ -40,9 +42,13 @@ public class Withdraw implements Validator {
         Withdraw withdraw = (Withdraw) o;
         BigDecimal transactionAmount = withdraw.transactionAmount;
 
-        if (transactionAmount.compareTo(BigDecimal.valueOf(1000))< 0) {
-            errors.rejectValue("transactionAmount","withdraw.transactionAmount.min");
+        if (transactionAmount == null || transactionAmount.compareTo(BigDecimal.valueOf(1000)) < 0) {
+            errors.rejectValue("transactionAmount", "withdraw.transactionAmount.min");
             return;
+        }
+        if (transactionAmount.compareTo(BigDecimal.valueOf(1000000000)) > 0) {
+            errors.rejectValue("transactionAmount", "withdraw.transactionAmount.max");
+
         }
 
     }
